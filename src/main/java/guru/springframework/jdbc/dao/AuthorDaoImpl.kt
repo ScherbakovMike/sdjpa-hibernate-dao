@@ -10,8 +10,17 @@ import org.springframework.stereotype.Component
  */
 @Component
 class AuthorDaoImpl(private val entityManagerFactory: EntityManagerFactory) : AuthorDao {
+
     override fun getById(id: Long): Author? = getEntityManager().find(Author::class.java, id)
 
+    override fun listAuthorByLastNameLike(lastName: String?): List<Author> {
+        val entityManager = getEntityManager()
+        entityManager.use {
+            val query = it.createQuery("SELECT a FROM Author a where a.lastName like :last_name", Author::class.java)
+            query.setParameter("last_name", "${lastName}%")
+            return query.resultList
+        }
+    }
 
     override fun findAuthorByName(firstName: String, lastName: String): Author? {
         val query: TypedQuery<Author> = getEntityManager().createQuery(

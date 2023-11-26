@@ -138,10 +138,13 @@ class DaoIntegrationTest {
 
     @Test
     void testGetAuthor() {
-
         Author author = authorDao.getById(1L);
-
         assertThat(author).isNotNull();
+    }
 
+    @Test
+    void testListAuthorByLastNameLike() {
+        var authors = authorDao.listAuthorByLastNameLike("Wall");
+        assertThat(authors.size()).isPositive();
     }
 }
